@@ -1,0 +1,5 @@
+[theme]
+primaryColor = "#00D2FF"            # Sky Blue for UI highlights/lines
+backgroundColor = "#1A1C1E"         # Deep Slate Grey background
+secondaryBackgroundColor = "#25282C" # Dark Grey cards & form boxes
+textColor = "#E6B800"               # Radiant Gold main text
