@@ -20,15 +20,11 @@ def main():
         
     initial_session_defaults()
     workout_started = st.session_state.get("workout_started", False)
-
-    # --- ALL SIDEBAR UI COMPONENTS ---
     with st.sidebar:
         st.title("AI Coach")
         if st.session_state.username:
             st.caption(f"👤 Logged in as {st.session_state.username}")
         st.divider()
-        
-        # 1. SETUP VIEW (Shows only if workout has not started)
         if not workout_started:
             st.subheader("Workout Plan")
             st.selectbox("Exercise", options=EXERCISE_OPTIONS, key="plan_exercise")
@@ -40,8 +36,6 @@ def main():
             if start_session_button:
                 st.session_state["workout_started"] = True
                 st.rerun()
-
-        # 2. ACTIVE WORKOUT VIEW (Shows inside the sidebar if workout is live)
         else:
             exercise = st.session_state.get("plan_exercise")
             
@@ -49,17 +43,14 @@ def main():
             end_session_button = st.button("End Session", use_container_width=True, key="end_session_button")
             if end_session_button:
                 st.session_state["workout_started"] = False
-                st.rerun() 
-                
+                st.rerun()      
             st.markdown("")
             st.subheader("Progress")
-        
             total_reps = st.session_state.get("reps", 0)
             current_set_reps = st.session_state.get("current_set_reps", 0)
             reps_per_set = st.session_state.get("plan_reps", 0)
             sets_completed = st.session_state.get("sets_completed", 0)
             target_sets = st.session_state.get("plan_sets", 0) # Linked to plan_sets input
-            
             st.metric("Total Reps", f"{total_reps}")
             st.metric("Current Set Reps", f"{current_set_reps} / {reps_per_set}")
             st.metric("Sets Completed", f"{sets_completed} / {target_sets}")
@@ -100,6 +91,28 @@ def main():
     if workout_started:
         st.write("### Live Tracking Feed")
         # Your video frame placeholder (e.g., st.image) will be coded right here in the next section!
+    st.title("AI gym coach")
+    st.markdown("Transforming workouts with live posture tracking and smart feedback")
+    if not workout_started:
+        st.markdown(
+            """
+            <div style="
+                border: 1px dashed #444;
+                border-radius: 8px;
+                padding: 40px 32px;
+                text-align: center;
+                color: #888;
+                margin-top: 32px;
+            ">
+                <h2 style="color: #ccc; margin-bottom: 8px;"> Make your own workout plan</h2>
+                <p style="font-size: 1.05rem;">
+                    Choose your exercises and<br>
+                    then click <strong>Start Workout</strong> to activate the camera and
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 if __name__ == "__main__":
     main()
