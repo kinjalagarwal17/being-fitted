@@ -3,7 +3,9 @@ from services.auth.login_wall import render_login_wall
 from services.state.session_default import initial_session_defaults
 from services.config.workout_config import EXERCISE_OPTIONS
 import os
-from services.Style_loader import load_css, inject_local_font
+from services.Style_loader import load_css, inject_local_font,inject_webrtc_styles
+from streamlit_webrtc import webrtc_streamer, WebRtcMode
+from services.persistence.exercise_repository import init_db
 
 def main():
     st.set_page_config(
@@ -12,8 +14,10 @@ def main():
         initial_sidebar_state="expanded",
         layout="centered"
     )
-    load_css(os.path.join(os.getcwd(), "static", "style.css"))
-    inject_local_font(os.path.join(os.getcwd(), "static", "AdobeClean.otf"), "AdobeClean")
+        # FIX: Point directly inside the hidden .streamlit folder structure
+    load_css(os.path.join(os.getcwd(), ".streamlit", "static", "Style.css"))
+    inject_local_font(os.path.join(os.getcwd(), ".streamlit", "static", "AdobeClean.otf"), "AdobeClean")
+
 
     if not render_login_wall():
         return
@@ -107,12 +111,30 @@ def main():
                 <h2 style="color: #ccc; margin-bottom: 8px;"> Make your own workout plan</h2>
                 <p style="font-size: 1.05rem;">
                     Choose your exercises and<br>
-                    then click <strong>Start Workout</strong> to activate the camera and
+                    then click <strong>Start Workout</strong> to activate the camera and 
+                    your AI coach will be activated
                 </p>
             </div>
             """,
             unsafe_allow_html=True,
         )
+    else:
+        
+        context = webrtc_streamer(
+            key="exercise-analysis",
+            mode=WebRtcMode.SENDRECV,
+            video_processor_factory=None,
+            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+            media_stream_constraints={
+                "video": True,
+                "audio": False
+            },
+            async_processing=True
+        )
+
+    st.markdown("#### Workout History")
+    inject_webrtc_styles()
+
 
 if __name__ == "__main__":
     main()
