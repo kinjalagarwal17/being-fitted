@@ -3,3 +3,6 @@ primaryColor = "#7D9B7B"              # Rich Sage Green
 backgroundColor = "#FAF8F2"           # Warm Ivory Cream
 secondaryBackgroundColor = "#F3F0E8"  # Luxury Card Surface
 textColor = "#2E3A31"                 # Deep Forest Sage
+[server]
+enableCORS = false
+enableXsrfProtection = false
